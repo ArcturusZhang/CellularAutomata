@@ -1,3 +1,4 @@
 public enum NeighborhoodType {
-    Moore, VonNeumann
+    Moore,
+    VonNeumann
 }

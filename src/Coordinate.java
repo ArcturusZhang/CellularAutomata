@@ -1,20 +1,27 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Coordinate class, describes a position.
+ */
 public class Coordinate implements Neighborlizable {
-    private CoordinateSystem system = null;
-    private int x;
-    private int y;
+    private int x; // x coordinate
+    private int y; // y coordinate
 
-    Coordinate() {
+    /**
+     * Default constructor
+     */
+    private Coordinate() {
     }
 
-    Coordinate(CoordinateSystem system, int x, int y) {
-        initialize(system, x, y);
-    }
-
-    public CoordinateSystem getSystem() {
-        return system;
+    /**
+     * To get an instance of Coordinate class, not for external to use.
+     * @param x, the x coordinate
+     * @param y, the y coordinate
+     * @throws Exception
+     */
+    private Coordinate(int x, int y) throws Exception {
+        initialize(x, y);
     }
 
     public int getX() {
@@ -36,23 +43,34 @@ public class Coordinate implements Neighborlizable {
         return cnt;
     }
 
-    private void initialize(CoordinateSystem system, int x, int y) {
-        this.system = system;
+    /**
+     * Initialize a Coordinate instance.
+     * @param x, the x coordinate
+     * @param y, the y coordinate
+     * @throws Exception
+     */
+    private void initialize(int x, int y) throws Exception {
         this.x = x;
         this.y = y;
-        if (x >= system.getMaxX() || x < 0) throw new IllegalArgumentException("Coordinate out of range.");
-        if (y >= system.getMaxY() || y < 0) throw new IllegalArgumentException("Coordinate out of range.");
+        if (x >= CoordinateSystemSettings.getInstance().getMaxX() || x < 0) throw new IllegalArgumentException("Coordinate out of range.");
+        if (y >= CoordinateSystemSettings.getInstance().getMaxY() || y < 0) throw new IllegalArgumentException("Coordinate out of range.");
     }
 
-    public static Coordinate getInstance(CoordinateSystem system, int x, int y) {
+    /**
+     * The method for external routines to invoke to get an instance of Coordinate class with the given x and y.
+     * @param x
+     * @param y
+     * @return a new Coordinate instance.
+     */
+    public static Coordinate getInstance(int x, int y) {
         try {
-            switch (system.getCyclicType()) {
+            switch (CoordinateSystemSettings.getInstance().getCyclicType()) {
                 case NonCyclic:
-                    return new Coordinate(system, x, y);
+                    return new Coordinate(x, y);
                 case Cyclic:
-                    int maxX = system.getMaxX();
-                    int maxY = system.getMaxY();
-                    return new Coordinate(system, (x + maxX) % maxX, (y + maxY) % maxY);
+                    int maxX = CoordinateSystemSettings.getInstance().getMaxX();
+                    int maxY = CoordinateSystemSettings.getInstance().getMaxY();
+                    return new Coordinate((x + maxX) % maxX, (y + maxY) % maxY);
                 default:
                     return null;
             }
@@ -63,48 +81,48 @@ public class Coordinate implements Neighborlizable {
 
     @Override
     public Neighborlizable left() {
-        return getInstance(system, x - 1, y);
+        return getInstance(x - 1, y);
     }
 
     @Override
     public Neighborlizable right() {
-        return getInstance(system, x + 1, y);
+        return getInstance(x + 1, y);
     }
 
     @Override
     public Neighborlizable top() {
-        return getInstance(system, x, y + 1);
+        return getInstance(x, y + 1);
     }
 
     @Override
     public Neighborlizable bottom() {
-        return getInstance(system, x, y - 1);
+        return getInstance(x, y - 1);
     }
 
     @Override
     public Neighborlizable leftTop() {
-        return getInstance(system, x - 1, y + 1);
+        return getInstance(x - 1, y + 1);
     }
 
     @Override
     public Neighborlizable leftBottom() {
-        return getInstance(system, x - 1, y - 1);
+        return getInstance(x - 1, y - 1);
     }
 
     @Override
     public Neighborlizable rightTop() {
-        return getInstance(system, x + 1, y + 1);
+        return getInstance(x + 1, y + 1);
     }
 
     @Override
     public Neighborlizable rightBottom() {
-        return getInstance(system, x + 1, y - 1);
+        return getInstance(x + 1, y - 1);
     }
 
     @Override
-    public ArrayList<Neighborlizable> getNeighborhoods() {
+    public ArrayList<Neighborlizable> getNeighborhoods() throws Exception {
         ArrayList<Neighborlizable> list = Neighborlizable.super.getNeighborhoods();
-        switch (system.getNeighborhoodType()) {
+        switch (CoordinateSystemSettings.getInstance().getNeighborhoodType()) {
             case Moore:
                 list.add(leftTop());
                 list.add(leftBottom());
@@ -128,12 +146,12 @@ public class Coordinate implements Neighborlizable {
         if (object == null) return false;
         if (object instanceof Coordinate) {
             Coordinate coordinate = (Coordinate) object;
-            return (system == coordinate.system) && (x == coordinate.x) && (y == coordinate.y);
+            return (x == coordinate.x) && (y == coordinate.y);
         } else return false;
     }
 
     @Override
     public int hashCode() {
-        return (system.hashCode() << 8) | (Integer.valueOf(x).hashCode() << 4) | (Integer.valueOf(y).hashCode());
+        return (Integer.valueOf(x).hashCode() << 6) | (Integer.valueOf(y).hashCode());
     }
 }

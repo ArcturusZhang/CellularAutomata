@@ -1,62 +1,24 @@
-import java.util.ArrayList;
-
-public class CharCell extends Coordinate {
-    private State state = State.DEAD;
-    private char symbol = ' ';
-
-    CharCell() {
+/**
+ * CharCell class represents for a cell using a character to display its state.
+ */
+public class CharCell extends Cell<Character> {
+    /**
+     * Constructor of a CharCell instance.
+     *
+     * @param symbols, an array contains all the characters for every state of the cell.
+     */
+    protected CharCell(Character[] symbols) {
+        super(symbols);
     }
 
-    public static char[][] getChars(ArrayList<CharCell> charCells) {
-        if (charCells.size() == 0) return null;
-        int maxX = charCells.get(0).getSystem().getMaxX();
-        int maxY = charCells.get(0).getSystem().getMaxY();
-        char[][] chars = new char[maxX][];
-        for (int i = 0; i < maxX; i++) {
-            chars[i] = new char[maxY];
-        }
-        for (CharCell charCell : charCells) {
-            chars[charCell.getX()][charCell.getY()] = charCell.symbol;
-        }
-        return chars;
-    }
-
-    public static void drawCharCells(ArrayList<CharCell> charCells) {
-        char[][] chars = getChars(charCells);
-        if (chars[0] == null) return;
-        for (int i = 0; i < chars.length; i++) {
-            StringBuffer stringBuffer = new StringBuffer();
-            for (int j = 0; j < chars[0].length; j++) {
-                stringBuffer.append(chars[i][j]);
-            }
-            System.out.println(stringBuffer);
-        }
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public char getSymbol() {
-        return symbol;
-    }
-
+    @Override
     public void changeState() {
-        switch (state) {
-            case ALIVE:
-                symbol = 'O';
-                state = State.DEAD;
-                break;
-            case DEAD:
-                symbol = ' ';
-                state = State.ALIVE;
-                break;
-        }
+        changeStateTo(currentState == State.DEAD ? State.ALIVE : State.DEAD);
     }
 
     @Override
     public String toString() {
-        return String.valueOf(symbol);
+        return String.valueOf(currentSymbol);
     }
 
     @Override
