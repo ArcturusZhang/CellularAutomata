@@ -6,7 +6,7 @@ public class ConwayRule extends Rule {
     }
 
     @Override
-    public void applyRuleAt(Grid grid, Neighborlizable coordinate) throws Exception {
+    public void applyRuleAt(Grid grid, Coordinate coordinate) throws Exception {
         Cell cell = grid.get(coordinate);
         int countOfAliveNeighbors = grid.countOfAliveNeighborsAt(coordinate);
         switch (cell.getCurrentState()) {

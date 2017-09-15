@@ -7,7 +7,7 @@ public class Grid implements CelluarAutomataUniverse {
     /**
      * Use a HashMap to store the corresponding relationship of a pair of coordinate and cell.
      */
-    private Map<Neighborlizable, Cell> map = new HashMap<>();
+    private Map<Coordinate, Cell> map = new HashMap<>();
     private Rule rule = null;
 
     Grid() {
@@ -15,22 +15,15 @@ public class Grid implements CelluarAutomataUniverse {
 
     /**
      * Get an instance of grid with the given Rule.
+     *
      * @param rule
      */
     Grid(Rule rule) {
         this.rule = rule;
     }
 
-    Grid(Map<Neighborlizable, Cell> map) {
+    Grid(Map<Coordinate, Cell> map) {
         this.map = map;
-    }
-
-    public void setRule(Rule rule) {
-        this.rule = rule;
-    }
-
-    public Rule getRule() {
-        return rule;
     }
 
     private static void displayCells(Cell[][] cells) {
@@ -45,35 +38,63 @@ public class Grid implements CelluarAutomataUniverse {
         }
     }
 
-    public Cell put(Neighborlizable key, Cell value) {
+    public int getMaxX() {
+        try {
+            return CoordinateSystemSettings.getInstance().getMaxX();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    public int getMaxY() {
+        try {
+            return CoordinateSystemSettings.getInstance().getMaxY();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    public Rule getRule() {
+        return rule;
+    }
+
+    public void setRule(Rule rule) {
+        this.rule = rule;
+    }
+
+    public Cell put(Coordinate key, Cell value) {
         return map.put(key, value);
     }
 
-    public Cell get(Neighborlizable key) {
+    public Cell get(Coordinate key) {
         return map.get(key);
     }
 
-    @Override
-    public synchronized Set<Neighborlizable> aliveNeighborsAt(Neighborlizable coordinate) throws Exception {
-        ArrayList<Neighborlizable> neighborhoods = coordinate.getNeighborhoods();
-        Set<Neighborlizable> neighborlizableSet = new HashSet<>();
-        for (Neighborlizable neighbor : neighborhoods) {
-            if (map.get(neighbor).isAlive()) {
-                neighborlizableSet.add(neighbor);
-            }
-        }
-        return neighborlizableSet;
+    public Set<Coordinate> keySet() {
+        return map.keySet();
     }
 
     @Override
-    public synchronized int countOfAliveNeighborsAt(Neighborlizable coordinate) throws Exception {
+    public synchronized Set<Coordinate> aliveNeighborsAt(Coordinate coordinate) throws Exception {
+        ArrayList<Coordinate> neighborhoods = coordinate.getNeighborhoods();
+        Set<Coordinate> coordinateSet = new HashSet<>();
+        for (Coordinate neighbor : neighborhoods) {
+            if (map.get(neighbor).isAlive()) {
+                coordinateSet.add(neighbor);
+            }
+        }
+        return coordinateSet;
+    }
+
+    @Override
+    public synchronized int countOfAliveNeighborsAt(Coordinate coordinate) throws Exception {
         return aliveNeighborsAt(coordinate).size();
     }
 
     @Override
-    public synchronized Cell[][] getCellGrid() throws Exception {
-        int maxX = CoordinateSystemSettings.getInstance().getMaxX();
-        int maxY = CoordinateSystemSettings.getInstance().getMaxY();
+    public synchronized Cell[][] getCellGrid() {
+        int maxX = getMaxX();
+        int maxY = getMaxY();
         Cell[][] cells = new Cell[maxX][];
         for (int i = 0; i < maxX; i++) {
             cells[i] = new Cell[maxY];
@@ -86,12 +107,12 @@ public class Grid implements CelluarAutomataUniverse {
 
     @Override
     public synchronized void update() {
-        Set<Neighborlizable> coordinates = map.keySet();
+        Set<Coordinate> coordinates = map.keySet();
         try {
-            for (Neighborlizable coordinate : coordinates) {
+            for (Coordinate coordinate : coordinates) {
                 rule.applyRuleAt(this, coordinate);
             }
-            for (Neighborlizable coordinate : coordinates) {
+            for (Coordinate coordinate : coordinates) {
                 map.get(coordinate).update();
             }
         } catch (Exception e) {
@@ -105,6 +126,7 @@ public class Grid implements CelluarAutomataUniverse {
     public void display() {
         try {
             displayCells(this.getCellGrid());
+            System.out.println("--------------------------------");
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -7,7 +7,7 @@ public class CharCell extends Cell<Character> {
      *
      * @param symbols, an array contains all the characters for every state of the cell.
      */
-    protected CharCell(Character[] symbols) {
+    CharCell(Character[] symbols) {
         super(symbols);
     }
 

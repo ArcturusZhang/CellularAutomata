@@ -3,5 +3,5 @@ public abstract class Rule {
     int deadLowerThrehold;
     int reviveNumber;
 
-    public abstract void applyRuleAt(Grid grid, Neighborlizable coordinate) throws Exception;
+    public abstract void applyRuleAt(Grid grid, Coordinate coordinate) throws Exception;
 }

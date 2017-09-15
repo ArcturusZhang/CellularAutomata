@@ -30,6 +30,22 @@ public class CoordinateSystemSettings {
         return neighborhoodType;
     }
 
+    public void setNeighborhoodType(NeighborhoodType neighborhoodType) {
+        this.neighborhoodType = neighborhoodType;
+    }
+
+    public void setCyclicType(CyclicType cyclicType) {
+        this.cyclicType = cyclicType;
+    }
+
+    public void setMaxX(int maxX) {
+        this.maxX = maxX;
+    }
+
+    public void setMaxY(int maxY) {
+        this.maxY = maxY;
+    }
+
     public CyclicType getCyclicType() {
         return cyclicType;
     }
