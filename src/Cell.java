@@ -71,8 +71,10 @@ public abstract class Cell<T> {
      * To update the cell's state with nextState.
      */
     public void update() {
-        currentState = nextState;
-        currentSymbol = symbols[currentState.ordinal()];
-        nextState = null;
+        if (nextState != null) { // Only update state when nextState is not null, otherwise the state is not changed.
+            currentState = nextState;
+            currentSymbol = symbols[currentState.ordinal()];
+            nextState = null;
+        }
     }
 }

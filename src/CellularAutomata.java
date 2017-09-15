@@ -4,7 +4,7 @@ public class CellularAutomata {
     public static void main(String[] args) throws Exception {
         int maxX = 10;
         int maxY = 20;
-        Character[] symbols = new Character[] {'o', 'x'};
+        Character[] symbols = new Character[] {' ', 'o'};
         CoordinateSystemSettings system = CoordinateSystemSettings.getInstance(NeighborhoodType.Moore, CyclicType.Cyclic, maxX, maxY);
         Grid grid = new Grid(new ConwayRule());
         for (int j = 0; j < maxY; j++) {

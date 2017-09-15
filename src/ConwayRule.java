@@ -14,16 +14,10 @@ public class ConwayRule extends Rule {
                 if (countOfAliveNeighbors < deadLowerThrehold || countOfAliveNeighbors > deadUpperThrehold) {
                     cell.changeStateTo(State.DEAD);
                 }
-                else {
-                    cell.changeStateTo(State.ALIVE);
-                }
                 return;
             case DEAD:
                 if (countOfAliveNeighbors == reviveNumber) {
                     cell.changeStateTo(State.ALIVE);
-                }
-                else {
-                    cell.changeStateTo(State.DEAD);
                 }
                 return;
         }
