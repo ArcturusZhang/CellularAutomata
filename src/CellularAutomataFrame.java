@@ -40,7 +40,6 @@ class CellularAutomataCanvas extends Canvas implements Runnable {
     private Grid grid;
     private int interval;
     private boolean flag = true;
-    private boolean reset = false;
 
     CellularAutomataCanvas(Grid grid, int interval) {
         this.grid = grid;
@@ -82,7 +81,7 @@ class CellularAutomataCanvas extends Canvas implements Runnable {
         int ny = grid.getMaxY();
         int wx = this.getWidth() / nx;
         int wy = this.getHeight() / ny;
-        reset = nx * wx == this.getWidth() && ny * wy == this.getHeight();
+        boolean reset = nx * wx == this.getWidth() && ny * wy == this.getHeight();
         if (!reset) {
             this.setSize(nx * wx, ny * wy);
         }
