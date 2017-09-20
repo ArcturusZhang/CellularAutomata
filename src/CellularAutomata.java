@@ -1,13 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 
 public class CellularAutomata {
     public static void main(String[] args) {
         int maxX = 20;
         int maxY = 20;
         CoordinateSystemSettings.getInstance(NeighborhoodType.Moore, CyclicType.Cyclic, maxX, maxY);
-        Color[] symbols = new Color[] {Color.CYAN, Color.RED};
+        Color[] symbols = new Color[]{Color.CYAN, Color.RED};
         Grid grid = new Grid(new ConwayRule());
         for (int j = 0; j < maxY; j++) {
             for (int i = 0; i < maxX; i++) {
