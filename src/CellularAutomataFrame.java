@@ -5,25 +5,34 @@ import java.util.Set;
 public class CellularAutomataFrame extends JFrame {
     CellularAutomataCanvas gridCanvas = null;
 
-    public CellularAutomataFrame(Grid grid) {
-        super("Cellular Automata");
+    public CellularAutomataFrame(String title, Grid grid) {
+        super(title);
         this.setSize(600, 600);
         this.setVisible(true);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(new FlowLayout());
 //        this.validate();
-        gridCanvas = new CellularAutomataCanvas(grid, 1000);
+        gridCanvas = new CellularAutomataCanvas(grid, 500);
         gridCanvas.setSize(500, 500);
         gridCanvas.setBackground(Color.CYAN);
         this.add(gridCanvas);
-        Thread gridThread = new Thread(gridCanvas, "CellularAutomataThread");
-        gridThread.start();
+        new Thread(gridCanvas).start();
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         gridCanvas.stop();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        gridCanvas.resume();
+        new Thread(gridCanvas).start();
+    }
+    public CellularAutomataFrame(Grid grid) {
+        this("Cellular Automaton", grid);
     }
 }
 
@@ -31,6 +40,7 @@ class CellularAutomataCanvas extends Canvas implements Runnable {
     private Grid grid;
     private int interval;
     private boolean flag = true;
+    private boolean reset = false;
 
     CellularAutomataCanvas(Grid grid, int interval) {
         this.grid = grid;
@@ -54,12 +64,28 @@ class CellularAutomataCanvas extends Canvas implements Runnable {
         flag = false;
     }
 
+    public void resume() {
+        flag = true;
+    }
+
+    public void setGrid(Grid grid) {
+        this.grid = grid;
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
+
     @Override
     public void paint(Graphics g) {
         int nx = grid.getMaxX();
         int ny = grid.getMaxY();
         int wx = this.getWidth() / nx;
         int wy = this.getHeight() / ny;
+        reset = nx * wx == this.getWidth() && ny * wy == this.getHeight();
+        if (!reset) {
+            this.setSize(nx * wx, ny * wy);
+        }
         Set<Coordinate> coordinates = grid.keySet();
         try {
             for (Coordinate coordinate : coordinates) {

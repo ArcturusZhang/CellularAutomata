@@ -3,8 +3,8 @@ import java.awt.*;
 
 public class CellularAutomata {
     public static void main(String[] args) {
-        int maxX = 20;
-        int maxY = 20;
+        int maxX = 30;
+        int maxY = 30;
         CoordinateSystemSettings.getInstance(NeighborhoodType.Moore, CyclicType.Cyclic, maxX, maxY);
         Color[] symbols = new Color[]{Color.CYAN, Color.RED};
         Grid grid = new Grid(new ConwayRule());
@@ -15,7 +15,7 @@ public class CellularAutomata {
                 grid.put(Coordinate.getInstance(i, j), cell);
             }
         }
-        JFrame frame = new CellularAutomataFrame(grid);
+        JFrame frame = new CellularAutomataFrame("Cellular Automaton", grid);
     }
 
     public static void test() {
